@@ -1,9 +1,16 @@
 <template>
   <div class="admin">
-    <h1>This is an about page</h1>
-
+    
+    <div id = 'users'>
+        <button v-for='user in users' :key=user.id @click=selectUser(user)>{{user.name}}</button>
+    </div>
 
     <div class='add'>
+        <form @submit.prevent="addUser">
+            <input type="text" v-model="userName">
+
+            <button type="submit">Add a New User</button>
+        </form>
         <div class='form'>
             <input v-model="title" placeholder="Recipe Title">
             <br>
@@ -30,7 +37,40 @@ export default {
   components: {
     
   },
+  data(){
+      return {
+          users: [{"name":"Rachel"}],
+          recipes:[],
+          userName:'',
+          ingredients:'',
+          instructions:'',
+          title:'',
+      }
+  },
   methods:{
+      async addUser(){
+          console.log('Attempting to add user')
+          try{
+              await axios.post("/api/users", {
+                  name: this.userName,
+              });
+              await this.getUsers();
+          } catch (error){
+              console.log(error);
+          }
+      },
+      async getUsers(){
+          try {
+              const res = await axios.get('/api/users');
+              this.users = res.data;
+          }catch (error ){
+              console.log(error);
+          }
+      },
+      selectUser(user){
+          this.user = user;
+          
+      },
       fileChanged(event){
          this.file = event.target.files[0]
       },
