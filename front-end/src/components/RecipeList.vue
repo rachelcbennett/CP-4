@@ -20,6 +20,9 @@ export default {
     props: {
         products: Array
     },
+    create: {
+       
+    },
     methods:{
       addProductToCart(product){
           this.$root.$data.cart.push(product);
