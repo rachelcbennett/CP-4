@@ -4,7 +4,14 @@
     <div id = 'users'>
         <button v-for='user in users' :key=user.id @click=selectUser(user)>{{user.name}}</button>
     </div>
+    <ul>
 
+        <li v-for="recipe in recipes" :key="recipe.id">
+            {{recipe.title}}
+            
+        </li>
+
+    </ul>
     <div class='add'>
         <form @submit.prevent="addUser">
             <input type="text" v-model="userName">
@@ -21,7 +28,7 @@
             <br>
             <input type="file" name="photo" @change="fileChanged">
             <br>
-            <button @click="upload">Upload Recipe</button>
+            <button @click="addRecipe">Upload Recipe</button>
         </div>
     </div>
   </div>
@@ -39,7 +46,8 @@ export default {
   },
   data(){
       return {
-          users: [{"name":"Rachel"}],
+          user: '',
+          users: [],
           recipes:[],
           userName:'',
           ingredients:'',
@@ -47,7 +55,36 @@ export default {
           title:'',
       }
   },
-  methods:{
+  created() {
+    this.getUsers();
+  },
+  methods: {
+      async addRecipe(){
+          try {
+            
+            const formData = new FormData();
+            formData.append('photo', this.file,this.file.name)
+            let r1 = await axios.post('/api/photos', formData);
+            await axios.post(`/api/users/${this.user._id}/recipes`,{
+                title:this.title,
+                ingredients: this.ingredients,
+                instructions: this.instructions,
+                path: r1.data.path,
+            });
+            this.getRecipes();
+          }catch(error){
+              console.log(error)
+          }
+      },
+
+      async getRecipes(){
+        try {
+            const response = await axios.get(`/api/users/${this.user._id}/recipes`);
+            this.recipes = response.data;
+        } catch (error) {
+            console.log(error);
+        }
+      },
       async addUser(){
           console.log('Attempting to add user')
           try{
@@ -61,15 +98,15 @@ export default {
       },
       async getUsers(){
           try {
-              const res = await axios.get('/api/users');
-              this.users = res.data;
+              const response = await axios.get('/api/users');
+              this.users = response.data;
           }catch (error ){
               console.log(error);
           }
       },
       selectUser(user){
           this.user = user;
-          
+          this.getRecipes();
       },
       fileChanged(event){
          this.file = event.target.files[0]
