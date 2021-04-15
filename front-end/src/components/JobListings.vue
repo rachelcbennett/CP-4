@@ -1,13 +1,20 @@
 <template>
 <div class="wrapper">
   <div v-if = "jobview" >
+      
       <div class="job">
-      {{this.job.title}}
+      
         <br>
         <img class="job-pic" :src="this.job.path" />
 
-        <p> {{this.job.description}} </p> 
-        <p> {{this.job.startdate}}</p>
+        <br>
+        <h2>{{this.job.title}}</h2>
+        <div class='desc'>
+         <p>Description: <em>{{this.job.description}}</em> </p> 
+         <p> Start Date: {{this.job.startdate}}</p>
+        </div>
+        <br>
+        <a class='unview' @click="unviewJob()" href = "#"> <strong>Back to Listings</strong> </a>
       </div>
   </div>
   <div v-else class= "jobs">
@@ -69,6 +76,9 @@ export default {
           } catch (error ){
               console.log(error);
           }
+      },
+      unviewJob(){
+        this.jobview = false;
       }
     }
 }
@@ -77,9 +87,9 @@ export default {
 
 
 <style scoped >
-    img{
-        width:100%;
-    }
+img{
+    width:100%;
+}
 
 
 .masonry{
@@ -133,11 +143,51 @@ export default {
 }
 
 p{
-    text-align: left;
+    text-align: center;
+}
+
+.masonry-item{
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+    border-width: 3px;
+    border-color:white;
+    border-style:solid;
 }
 
 .job{
     margin-left:auto;
     margin-right:auto;
+    text-align:center;
+}
+
+.masonry-item:hover{
+    border-color:rgba(169, 169, 169, 0.342);
+    border-style:solid;
+    transform: scale(1.05);
+    transition-duration:1.5s;
+}
+
+
+
+a{
+    text-decoration: none; 
+
+    border:solid;
+    border: 2px;
+    color:black;
+  
+}
+
+.desc{
+    border-width:2px;
+    border-color:rgba(169, 169, 169, 0.473);
+    border-style:solid;
+}
+
+.unview{
+    color:#00c2cb;
+    font-size: larger;
+
 }
 </style>

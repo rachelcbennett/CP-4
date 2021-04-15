@@ -25,7 +25,10 @@ const upload = multer({
 
 // Create a scheme for projects
 const userSchema = new mongoose.Schema({
-    name: String
+    name: String,
+    location: String,
+    numEmployees: Number,
+    avgSalary: Number,
 });
   
   // Create a model for projects
@@ -41,9 +44,34 @@ const jobSchema = new mongoose.Schema({
     description: String,
     startdate:String,
     path: String,
+    
 });
 
 const Job = mongoose.model('Job', jobSchema);
+
+//Edit a Job
+app.put('/api/users/:userID/jobs/:jobID', async (req, res) => {
+    try {
+        console.log("Entered edit mode!!!");
+        console.log(req.params.jobID);
+        console.log(req.params.userID);
+        let job = await Job.findOne({_id:req.params.jobID, user: req.params.userID});
+        if (!job) {
+            res.send(404);
+            return;
+        }
+        
+        job.title = req.body.title;
+        job.description = req.body.description;
+        job.path = req.body.path;
+        job.startdate = req.body.startdate;
+        await job.save();
+        res.send(job);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
 
 
 //Post a specific job
@@ -135,6 +163,9 @@ app.post('/api/photos', upload.single('photo'), async (req, res) => {
 app.post('/api/users', async (req, res) => {
     const user = new User({
       name: req.body.name,
+      location:req.body.location,
+      avgSalary: req.body.avgSalary,
+      numEmployees: req.body.numEmployees,
     });
     try {
       await user.save();
@@ -175,4 +206,4 @@ app.delete('/api/users/:userID/jobs/:jobID', async (req, res) => {
 
 
 
-app.listen(3000, () => console.log('Server listening on port 3000!'));
+app.listen(3002, () => console.log('Server listening on port 3002!'));

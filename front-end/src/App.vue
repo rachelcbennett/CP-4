@@ -2,10 +2,15 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/recipes">Recipes</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/jobs">View Jobs</router-link> |
+      <router-link to="/admin">Admin</router-link>
     </div>
     <router-view/>
+    <br>
+    <br>
+    <br>
+    <br>
+    <footer> <a href = "https://github.com/rachelcbennett/CP-4"> Github Repo </a></footer>
   </div>
 </template>
 
@@ -24,10 +29,24 @@
 
 #nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color:black;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color:#00c2cb;
+}
+
+footer{
+    position:fixed;
+    bottom:0;
+    opacity:75%;
+    text-align:center;
+    width:100%;
+    height:20px;
+    background-color: darkgray;
+}
+
+a{
+    text-decoration: none;
 }
 </style>

@@ -11,11 +11,17 @@
 import JobListings from '../components/JobListings.vue'
 
 export default {
-  name: 'RecipeIndex',
+  name: 'JobIndex',
   components: {
     JobListings
   }
 }
 </script>
 
-    JobListings
+
+<style scoped>
+
+    .jobs{
+        margin:2%;
+    }
+</style>
