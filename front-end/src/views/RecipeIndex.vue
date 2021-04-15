@@ -1,18 +1,21 @@
 <template>
-  <div class="recipes">
-    <RecipeList />
+  <div class="jobs">
+    <JobListings />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 
-import RecipeList from '@/components/RecipeList.vue'
+
+import JobListings from '../components/JobListings.vue'
 
 export default {
   name: 'RecipeIndex',
   components: {
-    RecipeList
+    JobListings
   }
 }
 </script>
+
+    JobListings

@@ -32,35 +32,37 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 
-const recipeSchema = new mongoose.Schema({
+const jobSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User'
     },
     title: String,
-    ingredients: String,
-    instructions:String,
+    description: String,
+    startdate:String,
     path: String,
 });
 
-const Recipe = mongoose.model('Recipe', recipeSchema);
+const Job = mongoose.model('Job', jobSchema);
 
-app.post('/api/users/:userID/recipes', async (req, res) => {
+
+//Post a specific job
+app.post('/api/users/:userID/job', async (req, res) => {
     try {
         let user = await User.findOne({_id: req.params.userID});
         if (!user) {
             res.send(404);
             return;
         }
-        let recipe = new Recipe({
+        let job = new Job({
             user: user,
             title: req.body.title,
-            ingredients: req.body.ingredients,
-            instructions: req.body.instructions,
+            description: req.body.description,
+            startdate: req.body.startdate,
             path: req.body.path,
         });
-        await recipe.save();
-        res.send(recipe);
+        await job.save();
+        res.send(job);
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
@@ -68,23 +70,52 @@ app.post('/api/users/:userID/recipes', async (req, res) => {
 
 });
 
-
-app.get('/api/users/:userID/recipes', async (req, res) => {
+//Get all jobs from a user
+app.get('/api/users/:userID/jobs', async (req, res) => {
     try {
         let user = await User.findOne({_id: req.params.userID});
         if (!user) {
             res.send(404);
             return;
         }
-        let recipes = await Recipe.find({user:user});
-        console.log("HEY")
-        res.send(recipes);
+        let jobs = await Job.find({user:user});
+        res.send(jobs);
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }
 });
 
+ //GET ALL Jobs
+app.get('/api/jobs', async (req, res) => {
+    try {
+        let jobs = await Job.find();
+        if (!jobs) {
+            res.send(404);
+            return;
+        }
+        res.send(jobs);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+//GET A SINGLE JOB BY ID
+app.get('/api/job/:jobID', async (req, res) => {
+    
+    try {
+        let job = await Job.findOne({_id: req.params.jobID});
+        if (!job) {
+            res.send(404);
+            return;
+        }
+        res.send(job);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
 
 
 
@@ -124,5 +155,24 @@ app.get('/api/users', async (req, res) => {
       res.sendStatus(500);
     }
 });
+app.delete('/api/users/:userID/jobs/:jobID', async (req, res) => {
+    try {
+        let job = await Job.findOne({_id: req.params.userID, _id: req.params.jobID})
+        if (!job){
+            console.log("this 404");
+            res.send(404);
+        }
+        await job.delete();
+        res.sendStatus(200);
+    }catch(error){
+        console.log(error);
+        res.sendStatus(500);
+    }
+
+});
+
+
+
+
 
 app.listen(3000, () => console.log('Server listening on port 3000!'));
